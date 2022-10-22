@@ -1,3 +1,3 @@
 # express-prisma-ts-rest
 
-## based clean code in typescript environment
+## based on clean code in typescript environment
