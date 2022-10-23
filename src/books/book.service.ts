@@ -1,12 +1,12 @@
 import { db } from '../utils/db.server';
-import type { Author } from '../author/author.service';
+import type { AuthorRead } from '../author/author.service';
 
 export type BookRead = {
   id: number;
   title: string;
   datePublished: Date;
   isFiction: boolean;
-  author: Author;
+  author: AuthorRead;
   // authorId: number;
 };
 
@@ -29,6 +29,7 @@ export const listBooks = async (): Promise<BookRead[]> => {
           id: true,
           firstName: true,
           lastName: true,
+          email: true,
         },
       },
     },
@@ -50,6 +51,7 @@ export const getBook = async (id: number): Promise<BookRead | null> => {
           id: true,
           firstName: true,
           lastName: true,
+          email: true,
         },
       },
     },
@@ -76,6 +78,7 @@ export const createBook = async (book: BookWrite): Promise<BookRead> => {
           id: true,
           firstName: true,
           lastName: true,
+          email: true,
         },
       },
     },
@@ -107,6 +110,7 @@ export const updateBook = async (
           id: true,
           firstName: true,
           lastName: true,
+          email: true,
         },
       },
     },

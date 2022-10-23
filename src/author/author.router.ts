@@ -2,6 +2,7 @@ import express from 'express';
 import type { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import * as AuthorService from './author.service';
+import { hashPassword } from '../utils/hash';
 
 export const authorRouter = express.Router();
 
@@ -52,14 +53,17 @@ authorRouter.post(
   '/',
   body('firstName').isString(),
   body('lastName').isString(),
+  body('email').isString(),
+  body('password').isString(),
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
     try {
-      const author = req.body;
-      const newAuthor = await AuthorService.createAuthor(author);
+      const hashedPassword = hashPassword(req.body.password);
+      const hashedAuthor = { ...req.body, password: hashedPassword };
+      const newAuthor = await AuthorService.createAuthor(hashedAuthor);
       return res.status(201).json(newAuthor);
     } catch (e: any) {
       return res.status(500).json(e.message);

@@ -1,23 +1,33 @@
 import { BookRead } from '../books/book.service';
 import { db } from '../utils/db.server';
 
-export type Author = {
+export type AuthorCreate = {
   id: number;
   firstName: string;
   lastName: string;
+  email: string;
+  password: string;
 };
 
-export const listAuthors = async (): Promise<Author[]> => {
+export type AuthorRead = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+};
+
+export const listAuthors = async (): Promise<AuthorRead[]> => {
   return db.author.findMany({
     select: {
       id: true,
       firstName: true,
       lastName: true,
+      email: true,
     },
   });
 };
 
-export const getAuthor = async (id: number): Promise<Author | null> => {
+export const getAuthor = async (id: number): Promise<AuthorRead | null> => {
   return db.author.findUnique({
     where: {
       id,
@@ -42,27 +52,31 @@ export const listBooksById = async (
 };
 
 export const createAuthor = async (
-  author: Omit<Author, 'id'>
-): Promise<Author> => {
-  const { firstName, lastName } = author;
+  author: Omit<AuthorCreate, 'id'>
+): Promise<AuthorCreate> => {
+  const { firstName, lastName, email, password } = author;
   return db.author.create({
     data: {
       firstName,
       lastName,
+      email,
+      password,
     },
     select: {
       id: true,
       firstName: true,
       lastName: true,
+      email: true,
+      password: true,
     },
   });
 };
 
 export const updateAuthor = async (
-  author: Omit<Author, 'id'>,
+  author: Omit<AuthorCreate, 'id'>,
   id: number
-): Promise<Author> => {
-  const { firstName, lastName } = author;
+): Promise<AuthorCreate> => {
+  const { firstName, lastName, password } = author;
   return db.author.update({
     where: {
       id,
@@ -70,11 +84,14 @@ export const updateAuthor = async (
     data: {
       firstName,
       lastName,
+      password,
     },
     select: {
       id: true,
       firstName: true,
       lastName: true,
+      email: true,
+      password: true,
     },
   });
 };

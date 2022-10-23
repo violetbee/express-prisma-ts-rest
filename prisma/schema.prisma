@@ -11,12 +11,16 @@ datasource db {
 }
 
 model Author {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  firstName String
-  lastName  String
-  Book      Book[]
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  email        String   @unique
+  password     String
+  firstName    String
+  lastName     String
+  accessToken  String?
+  refreshToken String?
+  Book         Book[]
 }
 
 model Book {
