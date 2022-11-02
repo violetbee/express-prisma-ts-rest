@@ -2,9 +2,6 @@
   "name": "express-prisma-ts",
   "version": "1.0.0",
   "main": "index.js",
-  "prisma": {
-    "seed": "node --require esbuild-register prisma/seed.ts"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/index.ts"

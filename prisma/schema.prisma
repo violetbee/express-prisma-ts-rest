@@ -10,26 +10,75 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Author {
-  id           Int      @id @default(autoincrement())
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  email        String   @unique
-  password     String
-  firstName    String
-  lastName     String
-  accessToken  String?
-  refreshToken String?
-  Book         Book[]
+model User {
+  id               String          @id @default(uuid())
+  role             Role            @default(BASIC)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  email            String          @unique
+  password         String
+  firstName        String
+  lastName         String
+  image            String
+  ownedPost        Post[]          @relation("OwnedPosts")
+  likedPost        Post[]          @relation("LikedPosts")
+  comment          Comment[]
+  userPreference   UserPreference? @relation(fields: [userPreferenceId], references: [id])
+  userPreferenceId String?         @unique
 }
 
-model Book {
-  id            Int      @id @default(autoincrement())
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  title         String
-  isFiction     Boolean
-  datePublished DateTime
-  author        Author   @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId      Int
+model UserPreference {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  theme     Theme    @default(LIGHT)
+  user      User?
+}
+
+model Post {
+  id         String    @id @default(uuid())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  title      String
+  content    String
+  slug       String    @unique
+  published  Boolean   @default(false)
+  comment    Comment[]
+  author     User      @relation("OwnedPosts", fields: [authorId], references: [id])
+  authorId   String
+  like       User      @relation("LikedPosts", fields: [likeId], references: [id])
+  likeId     String
+  Category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  content   String
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  slug      String   @unique
+  post      Post[]
+}
+
+enum Role {
+  ADMIN
+  MODERATOR
+  BASIC
+}
+
+enum Theme {
+  LIGHT
+  DARK
 }

@@ -1,5 +1,5 @@
 import { db } from '../utils/db.server';
-import type { AuthorRead } from '../author/author.service';
+import type { ReadUser } from '../user/types/server.types';
 import jwt from 'jsonwebtoken';
 import { isPasswordEqual } from '../utils/hash';
 
@@ -10,9 +10,9 @@ export type AuthorLogin = {
 
 export const loginAuthor = async (
   authLogin: AuthorLogin
-): Promise<AuthorRead | void | null> => {
+): Promise<ReadUser | void | null> => {
   const { email, password } = authLogin;
-  const hashedPassword = await db.author.findUnique({
+  const hashedPassword = await db.user.findUnique({
     where: {
       email,
     },
@@ -20,7 +20,7 @@ export const loginAuthor = async (
       password: true,
     },
   });
-  const user = await db.author.findUnique({
+  const user = await db.user.findUnique({
     where: {
       email,
     },
@@ -33,6 +33,6 @@ export const loginAuthor = async (
   });
   // console.log(isPasswordEqual(hashedPassword!.password, password));
   if (isPasswordEqual(hashedPassword!.password, password)) {
-    return user;
+    return user as ReadUser;
   }
 };
