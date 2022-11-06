@@ -15,6 +15,9 @@ export const GetAllUsers = async (): Promise<ReadUser[] | undefined> => {
         email: true,
         image: true,
         role: true,
+        _count: {
+          select: { ownedPost: true },
+        },
       },
     });
 
@@ -38,35 +41,6 @@ export const GetUserById = async (id: string) => {
       },
     });
     return user;
-  } catch (error: any) {
-    return error.message;
-  }
-};
-
-export const GetPostsByUser = async (id: string): Promise<Post[]> => {
-  try {
-    const posts = await db.post.findMany({
-      where: {
-        author: {
-          id,
-        },
-      },
-      select: {
-        title: true,
-        content: true,
-        slug: true,
-        author: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
-            image: true,
-          },
-        },
-      },
-    });
-    return posts;
   } catch (error: any) {
     return error.message;
   }

@@ -1,7 +1,6 @@
 import { Post } from '../../post/post.types';
 
 export type CreateUser = {
-  id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -16,8 +15,4 @@ export type ReadUser = {
   email: string;
   image: string;
   role?: string;
-};
-
-export type PostsByUser = {
-  posts: Post[];
 };

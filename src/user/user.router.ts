@@ -5,8 +5,6 @@ import * as UserService from './user.service';
 import { hashPassword } from '../utils/hash';
 import { USER_RESPONSES } from './user.response';
 import { validationResult } from 'express-validator';
-import { Role } from '@prisma/client';
-import { CreateUser } from './types/server.types';
 
 export const userRouter = express.Router();
 

@@ -31,7 +31,6 @@ export const loginAuthor = async (
       email: true,
     },
   });
-  // console.log(isPasswordEqual(hashedPassword!.password, password));
   if (isPasswordEqual(hashedPassword!.password, password)) {
     return user as ReadUser;
   }
