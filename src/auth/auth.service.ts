@@ -3,14 +3,14 @@ import type { ReadUser } from '../user/types/server.types';
 import jwt from 'jsonwebtoken';
 import { isPasswordEqual } from '../utils/hash';
 
-export type AuthorLogin = {
+export type UserLogin = {
   email: string;
   password: string;
 };
 
-export const loginAuthor = async (
-  authLogin: AuthorLogin
-): Promise<ReadUser | void | null> => {
+export const loginUser = async (
+  authLogin: UserLogin
+): Promise<string | null> => {
   const { email, password } = authLogin;
   const hashedPassword = await db.user.findUnique({
     where: {
@@ -31,7 +31,19 @@ export const loginAuthor = async (
       email: true,
     },
   });
-  if (isPasswordEqual(hashedPassword!.password, password)) {
-    return user as ReadUser;
+  if (!user) {
+    return null;
   }
+  if (!isPasswordEqual(hashedPassword!.password, password)) {
+    return null;
+  }
+
+  const payload = {
+    id: user?.id,
+  };
+
+  const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
+    expiresIn: '1d',
+  });
+  return token;
 };

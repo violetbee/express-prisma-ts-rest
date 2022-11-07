@@ -74,7 +74,10 @@ export const UpdatePost = async (
   }
 };
 
-export const CreateNewPost = async (post: CreatePost): Promise<boolean> => {
+export const CreateNewPost = async (
+  post: CreatePost,
+  id: string
+): Promise<boolean> => {
   try {
     const isPostExist = await db.post.findUnique({
       where: {
@@ -97,7 +100,7 @@ export const CreateNewPost = async (post: CreatePost): Promise<boolean> => {
           },
           author: {
             connect: {
-              id: post.authorId,
+              id,
             },
           },
         },

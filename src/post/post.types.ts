@@ -18,7 +18,6 @@ export type CreatePost = {
   slug: string;
   published: boolean;
   category: string;
-  authorId: string;
 };
 
 export type Comment = {

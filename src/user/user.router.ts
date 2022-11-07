@@ -5,6 +5,7 @@ import * as UserService from './user.service';
 import { hashPassword } from '../utils/hash';
 import { USER_RESPONSES } from './user.response';
 import { validationResult } from 'express-validator';
+import { checkAuth } from '../middleware/checkAuth';
 
 export const userRouter = express.Router();
 
@@ -25,6 +26,17 @@ userRouter.get('/', async (req: Request, res: Response) => {
 userRouter.get('/:id', async (req: Request, res: Response) => {
   try {
     const user = await UserService.GetUserById(req.params.id);
+    res.status(200).json(user);
+  } catch (error: any) {
+    res.status(500).json(error.message);
+  }
+});
+
+//Get User By JWT
+userRouter.get('/get/me', checkAuth, async (req: Request, res: Response) => {
+  try {
+    const userId = JSON.parse(JSON.stringify(req.user)).id.toString();
+    const user = await UserService.GetUserById(userId);
     res.status(200).json(user);
   } catch (error: any) {
     res.status(500).json(error.message);
@@ -60,6 +72,7 @@ userRouter.post(
 //Update User
 userRouter.put(
   '/:id',
+  checkAuth,
   VALIDATE.updateUser.map((validation) => validation),
   async (req: Request, res: Response) => {
     try {
