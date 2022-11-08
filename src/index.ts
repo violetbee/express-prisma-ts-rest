@@ -17,9 +17,9 @@ if (!process.env.PORT) {
 const PORT: number = parseInt(process.env.PORT as string, 10);
 
 const app = express();
+app.use(cookieParser());
 
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
-app.use(cookieParser());
 app.use(express.json());
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/user', userRouter);
