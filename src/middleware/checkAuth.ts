@@ -13,12 +13,12 @@ export const checkAuth = (
   next: NextFunction
 ) => {
   try {
-    const token = req.cookies.token;
-    console.log(token);
-    if (!token) {
+    const accessToken = req.cookies.token;
+    console.log(accessToken);
+    if (!accessToken) {
       res.status(401).json({ msg: 'Unauthorized' });
     } else {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+      const decoded = jwt.verify(accessToken, process.env.JWT_SECRET as string);
       req.user = decoded;
       next();
     }

@@ -9,13 +9,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
     const authorInfo = req.body as { email: string; password: string };
     const token = await AuthService.loginUser(authorInfo);
     if (token) {
-      res
-        .cookie('token', token, { httpOnly: true, secure: false })
-        .status(200)
-        .json({
-          maxAge: 86400000, // 1 day
-          message: 'Login successful',
-        });
+      res.status(200).json({ token: token });
     } else {
       res.status(401).json({ msg: 'Password is not correct' });
     }
